@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Customers</h2>
+
+<table class="table table-bordered table-hover">
+    <thead><td>Customer</td></thead>
+    <tbody
+           <tr><td>@Html.ActionLink("John Smith", "Index", "Customers")</td></tr>
+            <tr><td>@Html.ActionLink("Mary Williams", "Index", "Customers")</td></tr>
+    </tbody>
+</table>
+
