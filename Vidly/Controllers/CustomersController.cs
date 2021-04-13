@@ -3,21 +3,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Vidly.Models;
+using Vidly.ViewModels;
+using System.Data.Entity;
 
 namespace Vidly.Controllers
 {
     public class CustomersController : Controller
     {
-        // GET: Customers
-        [Route("customers/released/{year:regex(\\d{4})}/{month:regex(\\d{2}):range(1, 12)}")]
-        public ActionResult ByReleaseDate(int year, int month)
+       private ApplicationDbContext _context;
+
+        public CustomersController()
         {
-            return Content(year + "/" + month);
+            _context = new ApplicationDbContext();
         }
 
-        public ActionResult Index()
+       public ViewResult Index()
         {
-            return View();
+            var customers = _context.Customers.Include(c => c.MembershipType).ToList();
+
+            var viewModel = new CustomerViewModel
+            {
+                Customers = customers
+            };
+
+            return View(customers);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
+
+        public ActionResult Details(int id)
+        {
+            var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
+
+            if (customer == null)
+                return HttpNotFound();
+
+            return View(customer);
         }
     }
 }
